@@ -61,7 +61,7 @@ public class S3E1V1 {
 					((Student) p).getEducationalStage() == Student.EducationalStage.HIGH_SCHOOL;
 		}
 	}
-	private static class EvaluateSecondaryWorkersSalary50_80k implements ferrari_chris.serie03.esercizio01.operations.EvaluateOperation {
+	private static class EvaluateSecondaryWorkersSalary50_80k implements EvaluateOperation {
 
 		@Override
 		public boolean evaluate(Person p) {
