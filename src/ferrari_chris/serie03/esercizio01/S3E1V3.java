@@ -10,7 +10,8 @@ import ferrari_chris.serie03.esercizio01.person.PersonFactory;
 import ferrari_chris.serie03.esercizio01.person.Student;
 import ferrari_chris.serie03.esercizio01.person.Worker;
 
-public class S3E1V2 {
+public class S3E1V3 {
+
 
 	public static void main(String[] args) {
 		interface CategorizeOperation<K> {
@@ -30,55 +31,15 @@ public class S3E1V2 {
 			 */
 			boolean evaluate(Person p);
 		}
-		class CategorizeByAgeDecades implements CategorizeOperation<Integer> {
-
-			@Override
-			public Integer getCategory(Person p) {
-				return p.getAge() / 10;
-			}
-		}
-		class CategorizeByOccupation implements CategorizeOperation<String> {
-
-			@Override
-			public String getCategory(Person p) {
-				if (p instanceof Student)
-					return ((Student) p).getEducationalStage().toString();
-				if (p instanceof Worker)
-					return ((Worker) p).getWorkSector().toString();
-				return "RETIRED";
-			}
-		}
-		class CategorizeBySurname implements CategorizeOperation<String> {
-
+		List<Person> population = init(100);
+		
+		CategorizeOperation<String> stringCategorizationOperation = new CategorizeOperation<String>() {
 			@Override
 			public String getCategory(Person p) {
 				return p.getSurname();
 			}
-		}
-		class EvaluateHighschoolStudent implements EvaluateOperation {
-
-			@Override
-			public boolean evaluate(Person p) {
-				return p instanceof Student &&
-						((Student) p).getEducationalStage() == Student.EducationalStage.HIGH_SCHOOL;
-			}
-		}
-		class EvaluateSecondaryWorkersSalary50_80k implements EvaluateOperation {
-
-			@Override
-			public boolean evaluate(Person p) {
-				if (!(p instanceof Worker))
-					return false;
-				final Worker worker = (Worker) p;
-				return worker.getWorkSector() == Worker.WorkSectorType.SECONDARY &&
-						worker.getSalary() >= 50_000 &&
-						worker.getSalary() <= 80_000;
-			}
-		}
-		List<Person> population = init(100);
-
-		CategorizeOperation<String> stringCategorizationOperation = new CategorizeBySurname();
-
+		};
+		
 		// Categorize population by surname
 		Map<String, List<Person>> categorizedBySurname = new HashMap<>();
 		for (Person p : population) {
@@ -89,7 +50,16 @@ public class S3E1V2 {
 		}
 		
 		// Categorize population by Occupation
-		stringCategorizationOperation = new CategorizeByOccupation();
+		stringCategorizationOperation = new CategorizeOperation<String>() {
+			@Override
+			public String getCategory(Person p) {
+				if (p instanceof Student)
+					return ((Student) p).getEducationalStage().toString();
+				if (p instanceof Worker)
+					return ((Worker) p).getWorkSector().toString();
+				return "RETIRED";
+			}
+		};
 		Map<String, List<Person>> categorizedByOccupation = new HashMap<>();
 		for (Person p : population) {
 			String category = stringCategorizationOperation.getCategory(p);
@@ -99,7 +69,12 @@ public class S3E1V2 {
 		}
 
 		// Categorize population by Age (in decades)
-		CategorizeOperation<Integer> integerCategorizationOperation = new CategorizeByAgeDecades();
+		CategorizeOperation<Integer> integerCategorizationOperation = new CategorizeOperation<Integer>() {
+			@Override
+			public Integer getCategory(Person p) {
+				return p.getAge() / 10;
+			}
+		};
 		Map<Integer, List<Person>> categorizedByAgeDecades = new HashMap<>();
 		for (Person p : population) {
 			Integer category = integerCategorizationOperation.getCategory(p);
@@ -109,7 +84,17 @@ public class S3E1V2 {
 		}
 		
 		// Search for people working in secondary sector having salary between 50k - 80k 
-		EvaluateOperation eval = new EvaluateSecondaryWorkersSalary50_80k();
+		EvaluateOperation eval = new EvaluateOperation() {
+			@Override
+			public boolean evaluate(Person p) {
+				if (!(p instanceof Worker))
+					return false;
+				final Worker worker = (Worker) p;
+				return worker.getWorkSector() == Worker.WorkSectorType.SECONDARY &&
+						worker.getSalary() >= 50_000 &&
+						worker.getSalary() <= 80_000;
+			}
+		};
 		List<Person> secondaryWorkers = new ArrayList<>();
 		for (Person p : population) {
 			if (eval.evaluate(p))
@@ -117,7 +102,13 @@ public class S3E1V2 {
 		}
 	
 		// Search for high school students
-		eval = new EvaluateHighschoolStudent();
+		eval = new EvaluateOperation() {
+			@Override
+			public boolean evaluate(Person p) {
+				return p instanceof Student &&
+						((Student) p).getEducationalStage() == Student.EducationalStage.HIGH_SCHOOL;
+			}
+		};
 		List<Person> highSchoolStudents = new ArrayList<>();
 		for (Person p : population) {
 			if (eval.evaluate(p))
@@ -173,4 +164,5 @@ public class S3E1V2 {
 			System.out.print(p + ", ");
 		System.out.println();
 	}
+	
 }
