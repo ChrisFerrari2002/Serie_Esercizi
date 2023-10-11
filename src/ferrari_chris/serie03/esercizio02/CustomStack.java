@@ -5,7 +5,7 @@ public class CustomStack implements AdvancedStack{
     private int size = 0;
     private class StackElement{
         private StackElement nextElement;
-        private Object value;
+        private final Object value;
 
         public StackElement(Object value) {
             this.value = value;
@@ -13,6 +13,10 @@ public class CustomStack implements AdvancedStack{
 
         public void setNextElement(StackElement nextElement) {
             this.nextElement = nextElement;
+        }
+
+        public Object getValue() {
+            return value;
         }
 
         @Override
@@ -67,15 +71,25 @@ public class CustomStack implements AdvancedStack{
 
     @Override
     public long count(Evaluate testLogic) {
-        int cnt = 0;
+        long cnt = 0L;
         StackElement currentElement = firstElement;
         for (int i = 0; i < size; i++) {
-            if (testLogic.verify(currentElement)){
+            if (testLogic.verify(currentElement.getValue())){
                 cnt++;
             }
-            currentElement = firstElement.nextElement;
+            currentElement = currentElement.nextElement;
         }
         return cnt;
     }
 
+    @Override
+    public String toString() {
+        StackElement currentElement = firstElement;
+        StringBuilder value = new StringBuilder();
+        for (int i = size; i > 0; i--) {
+            value.append("Element ").append(i).append(": ").append(currentElement.getValue().toString()).append("\n");
+            currentElement = currentElement.nextElement;
+        }
+        return value.toString();
+    }
 }
