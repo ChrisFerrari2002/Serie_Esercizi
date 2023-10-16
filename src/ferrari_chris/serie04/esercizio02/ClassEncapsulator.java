@@ -6,13 +6,13 @@ import java.util.List;
 
 
 public class ClassEncapsulator {
-    public void encapsulate(String target) throws ClassNotFoundException, IllegalAccessException {
-        Class<?> targetClass = Class.forName("ferrari_chris.serie04.esercizio02." + target);
+    public void encapsulate() throws ClassNotFoundException, IllegalAccessException {
+        Class<Target> targetClass = Target.class;
         Field[] fields = targetClass.getDeclaredFields();
         List<String> type = getType(fields);
         List<String> name = getName(fields);
         List<String> value = getValue(fields);
-        printClass(target, type, name, value);
+        printClass(targetClass.getSimpleName(), type, name, value);
 
     }
     private List<String> getType(Field[] fields) throws ClassNotFoundException {
@@ -71,7 +71,7 @@ public class ClassEncapsulator {
     }
     private void printClass(String target, List<String> typeList, List<String> nameList, List<String> valueList) throws ClassNotFoundException {
         String rightClassName = target.substring(0, 1).toUpperCase() + target.substring(1);
-        System.out.printf("public class %s Target {\n", rightClassName);
+        System.out.printf("public class %s {\n", rightClassName);
         printFields(typeList, nameList, valueList);
         printGetters(typeList, nameList);
         printSetters(typeList, nameList);
@@ -83,7 +83,7 @@ public class ClassEncapsulator {
     public static void main(String[] args) {
         ClassEncapsulator classEncapsulator = new ClassEncapsulator();
         try {
-            classEncapsulator.encapsulate("Target");
+            classEncapsulator.encapsulate();
 
         } catch (ClassNotFoundException c){
             System.out.println("Classe non trovata.");
