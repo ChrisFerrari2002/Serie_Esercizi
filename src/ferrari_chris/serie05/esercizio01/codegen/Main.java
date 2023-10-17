@@ -1,6 +1,8 @@
 package ferrari_chris.serie05.esercizio01.codegen;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
+import java.lang.reflect.Type;
 import java.util.HashSet;
 
 public class Main {
@@ -36,7 +38,32 @@ public class Main {
     }
 
     private static String generateImplementation(Class<?> clazz) throws Exception {
-        // FIXME to implement
+        StringBuilder form = new StringBuilder();
+        Field[] fields = clazz.getDeclaredFields();
+        String type;
+        String fieldName;
+        String fieldValue;
+        Object annotation;
+        for (Field f : fields) {
+            if (f.isAnnotationPresent(Extract.class)){
+                f.setAccessible(true);
+                annotation = f.get(clazz);
+                type = f.getType().getSimpleName();
+
+                fieldName = annotation.toString();
+                fieldValue = f.get(clazz).toString();
+                if (type.equals("String")){
+                    form.append(String.format(fieldStringTemplate, type, fieldName, fieldValue));
+                    continue;
+                }
+                form.append(String.format(fieldTemplate, type, fieldName, fieldValue));
+            }
+        }
+        for (Field f : fields) {
+            f.setAccessible(true);
+        }
+
+
         return "";
     }
 
@@ -44,7 +71,7 @@ public class Main {
     public static void main(String[] args) {
         try {
             // REMARK: if using packages, make sure to use the fully qualified name! (my.package.Example)
-            System.out.println(generate("Example"));
+            System.out.println(generate("ferrari_chris.serie05.esercizio01.codegen.Example"));
         } catch (Exception exception) {
             System.err.println(exception.getMessage());
         }
