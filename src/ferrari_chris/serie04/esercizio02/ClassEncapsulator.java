@@ -4,7 +4,7 @@ import java.lang.reflect.Field;
 
 
 public class ClassEncapsulator {
-    public static void encapsulate(Class<?> targetClass) throws IllegalAccessException {
+    public static void encapsulate(Class<?> targetClass) {
         System.out.println("public class " + targetClass.getSimpleName() + " {");
         printFields(targetClass);
         printGetters(targetClass);
@@ -12,51 +12,42 @@ public class ClassEncapsulator {
         System.out.println("}");
     }
     private static void printFields(Class<?> targetClass) {
-        try {
-            Field[] fields = targetClass.getDeclaredFields();
-            Target target = new Target();
-            for (Field f : fields) {
-                f.setAccessible(true);
-                String type = f.getType().getSimpleName();
-                String name = f.getName();
-                Object value = f.get(target);
-                int val = getModifierValue(f);
-                String modifier;
-                switch (val) {
-                    default -> {
-                        modifier = "private ";
-                        print(modifier, type, name, value);
-                    }
-                    //public static = 9
-                    //private static = 10
-                    case (9), (10) -> {
-                        modifier = "private static ";
-                        print(modifier, type, name, value);
-                    }
-                    //public + static + final = 25
-                    //private + static + final = 26
-                    case (25), (26) -> {
-                        modifier = "private static final ";
-                        print(modifier, type, name, value);
-                    }
+        Field[] fields = targetClass.getDeclaredFields();
+        Target target = new Target();
+        for (Field f : fields) {
+            f.setAccessible(true);
+            String type = f.getType().getSimpleName();
+            String name = f.getName();
+            int val = getModifierValue(f);
+            String modifier;
+            switch (val) {
+                default -> {
+                    modifier = "private ";
+                    print(modifier, type, name);
+                }
+                //static = 8
+                //public static = 9
+                //private static = 10
+                case (8), (9), (10) -> {
+                    modifier = "private static ";
+                    print(modifier, type, name);
+                }
+                //static final = 24
+                //public + static + final = 25
+                //private + static + final = 26
+                case (24), (25), (26) -> {
+                    modifier = "private static final ";
+                    print(modifier, type, name);
                 }
             }
-        } catch (IllegalAccessException e){
-            System.out.println("Error");
         }
 
     }
     private static int getModifierValue(Field field){
         return field.getModifiers();
     }
-    private static void print(String modifier, String type, String name, Object value){
-        if (value == null){
-            System.out.printf("\t%s%s %s;\n",modifier, type, name);
-        } else if (value instanceof String){
-            System.out.printf("\t%s%s %s = \"%s\";\n",modifier, type, name, value);
-        } else {
-            System.out.printf("\t%s%s %s = %s;\n",modifier, type, name, value);
-        }
+    private static void print(String modifier, String type, String name){
+        System.out.printf("\t%s%s %s;\n",modifier, type, name);
     }
     private static void printGetters(Class<?> targetClass){
         Field[] fields = targetClass.getDeclaredFields();
