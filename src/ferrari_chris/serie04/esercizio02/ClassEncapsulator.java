@@ -14,7 +14,7 @@ public class ClassEncapsulator {
     private static void printFields(Class<?> targetClass) {
         try {
             Field[] fields = targetClass.getDeclaredFields();
-            Class<?> target = Target.class;
+            Target target = new Target();
             for (Field f : fields) {
                 f.setAccessible(true);
                 String type = f.getType().getSimpleName();
