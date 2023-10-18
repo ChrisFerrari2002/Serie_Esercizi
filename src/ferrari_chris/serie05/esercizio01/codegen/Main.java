@@ -36,34 +36,69 @@ public class Main {
         }
         return generatedCode;
     }
-
-    private static String generateImplementation(Class<?> clazz) throws Exception {
-        StringBuilder form = new StringBuilder();
+    private static int countRepetition(HashSet<String> set, String name){
+        int cnt = 0;
+        for (String s : set) {
+            if (name.equals(s))
+                cnt++;
+        }
+        return cnt;
+    }
+    private static void setNames(Class<?> clazz){
         Field[] fields = clazz.getDeclaredFields();
-        String type;
-        String fieldName;
-        String fieldValue;
-        Object annotation;
-        for (Field f : fields) {
-            if (f.isAnnotationPresent(Extract.class)){
-                f.setAccessible(true);
-                annotation = f.get(clazz);
-                type = f.getType().getSimpleName();
 
-                fieldName = annotation.toString();
-                fieldValue = f.get(clazz).toString();
-                if (type.equals("String")){
-                    form.append(String.format(fieldStringTemplate, type, fieldName, fieldValue));
-                    continue;
-                }
-                form.append(String.format(fieldTemplate, type, fieldName, fieldValue));
+        for (Field f : fields) {
+            if (f.isAnnotationPresent(Extract.class) && fieldNames.contains(f.getName())){
+                int cnt = countRepetition(fieldNames, f.getName());
+                fieldNames.add(f.getName() + cnt);
+                continue;
+            } else if (f.isAnnotationPresent(Extract.class)) {
+                fieldNames.add(f.getName());
             }
         }
-        for (Field f : fields) {
-            f.setAccessible(true);
+    }
+    private static String stringFields(Class<?> clazz){
+        try {
+            setNames(clazz);
+            String type;
+            Object value;
+            Field[] fields = clazz.getDeclaredFields();
+            for (Field f : fields) {
+                type = f.getType().getSimpleName();
+                value = f.get(clazz).toString();
+            }
+            for (String s : fieldNames) {
+
+            }
+            return "";
+        } catch (IllegalAccessException c){
+            System.out.println("Error");
         }
+        Class<?> newClass = clazz;
+        setNames(clazz);
+        String type;
+        String value;
+        Field[] fields = clazz.getDeclaredFields();
+        for (Field f : fields) {
+            type = f.getType().getSimpleName();
+            value = f.get(newClass);
+        }
+        for (String s : fieldNames) {
 
+        }
+        return "";
+    }
+    private static String stringGetters(Class<?> clazz){
+        setNames(clazz);
+        return "";
+    }
+    private static String stringSetters(Class<?> clazz){
+        return "";
+    }
 
+    private static String generateImplementation(Class<?> clazz) {
+        StringBuilder form = new StringBuilder();
+        Field[] fields = clazz.getDeclaredFields();
         return "";
     }
 
