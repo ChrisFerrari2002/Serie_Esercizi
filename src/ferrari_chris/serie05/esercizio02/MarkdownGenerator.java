@@ -6,22 +6,22 @@ import java.util.Arrays;
 public class MarkdownGenerator {
 
     private static void toMarkdown(final Class<?> theClass) {
-        // TODO verify that class has expected annotation
+        // Verify that class has expected annotation
 
         // Set title to class name
         System.out.printf("# Class `%s` info:%n", theClass.getName());
 
-        // TODO Document parent class
+        // Document parent class
         System.out.printf("Parent class : '%s'%n", theClass.getSuperclass());
 
-        // TODO Document interfaces
+        // Document interfaces
         System.out.println("## Interfaces(s)");
         Class<?>[] interfaces = theClass.getInterfaces();
         for (Object s : interfaces) {
             System.out.printf(" - '%s'%n", s);
         }
 
-        // TODO Document non ignored fields
+        // Document non ignored fields
         System.out.println("## Fields(s)");
         Field[] fields = theClass.getDeclaredFields();
         for (Field f : fields) {
@@ -31,7 +31,7 @@ public class MarkdownGenerator {
             }
         }
 
-        // TOOD Document non ignoreed costructurs
+        // Document non ignoreed costructurs
         System.out.println("## Constructors(s)");
         Constructor<?>[] constructors = theClass.getDeclaredConstructors();
         for (Constructor<?> c : constructors) {
@@ -47,7 +47,7 @@ public class MarkdownGenerator {
                 }
             }
         }
-        // TOOD Document non ignoreed methods
+        // Document non ignored methods
         System.out.println("## Methods(s)");
         Method[] methods = theClass.getDeclaredMethods();
 
