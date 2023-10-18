@@ -21,7 +21,7 @@ public class Main {
     // method name, parameter type, parameter, field name, parameter
     private static final String setterTemplate = "%n\tpublic void set%s(%s %s){%n\t\tthis.%s = %s;%n\t}%n";
 
-    public static String generate(String className) throws Exception {
+    public static String generate(String className) {
         Class<?> targetClass = null;
         String generatedCode = "";
         try {
@@ -34,10 +34,7 @@ public class Main {
         }
         return generatedCode;
     }
-    private static int random(){
-        Random rand = new Random();
-        return rand.nextInt(10) + 1;
-    }
+
     private static String checkString(Field f){
         Extract extract;
         String name = "";
@@ -47,8 +44,15 @@ public class Main {
                 fieldNames.add(f.getName());
                 name = f.getName();
             } else if (fieldNames.contains(name)) {
-                fieldNames.add(name + random());
-                name += random();
+                int cnt = 1;
+                String tempName = name;
+                while (fieldNames.contains(tempName)){
+                    tempName = name;
+                    tempName += cnt;
+                    cnt++;
+                }
+                name = tempName;
+                fieldNames.add(name);
             } else {
                 fieldNames.add(name);
             }
@@ -57,19 +61,18 @@ public class Main {
 
     private static String generateFields(Class<?> clazz) {
         Field[] fields = clazz.getDeclaredFields();
-        Extract extract;
         String name = "";
         String type;
         Object value;
         String str = "";
-        Example example = new Example();
+        Example ex = new Example();
         try {
             for (Field f : fields) {
                 f.setAccessible(true);
                 if (f.isAnnotationPresent(Extract.class)) {
                     name = checkString(f);
                     type = f.getType().getSimpleName();
-                    value = f.get(example);
+                    value = f.get(ex);
                     if (type.equals("String")) {
                         str += String.format(fieldStringTemplate, type, name, value);
                     } else {
@@ -84,8 +87,44 @@ public class Main {
 
         return str;
     }
+    private static String generateGetters(Class<?> clazz){
+        Field[] fields = clazz.getDeclaredFields();
+        String name = "";
+        String type;
+        String str = "";
+        Object[] names = fieldNames.toArray();
+        int cnt = names.length - 1;
+        for (Field f : fields) {
+            f.setAccessible(true);
+            if (f.isAnnotationPresent(Extract.class)) {
+                name = names[cnt].toString().substring(0,1).toUpperCase() + names[cnt].toString().substring(1);
+                type = f.getType().getSimpleName();
+                str += String.format(getterTemplate, type, name, name);
+                cnt--;
+            }
+        }
+        return str;
+    }
+    private static String generateSetters(Class<?> clazz){
+        Field[] fields = clazz.getDeclaredFields();
+        String name = "";
+        String type;
+        String str = "";
+        Object[] names = fieldNames.toArray();
+        int cnt = names.length - 1;
+        for (Field f : fields) {
+            f.setAccessible(true);
+            if (f.isAnnotationPresent(Extract.class)) {
+                name = names[cnt].toString().substring(0,1).toUpperCase() + names[cnt].toString().substring(1);
+                type = f.getType().getSimpleName();
+                str += String.format(setterTemplate, name, type, name, names[cnt], names[cnt]);
+                cnt--;
+            }
+        }
+        return str;
+    }
     private static String generateImplementation(Class<?> clazz) {
-        return "";
+        return generateFields(clazz) + generateGetters(clazz) + generateSetters(clazz);
     }
 
 
@@ -93,7 +132,6 @@ public class Main {
         try {
             // REMARK: if using packages, make sure to use the fully qualified name! (my.package.Example)
             System.out.println(generate("ferrari_chris.serie05.esercizio01.codegen.Example"));
-            System.out.println(generateFields(Example.class));
         } catch (Exception exception) {
             System.err.println(exception.getMessage());
         }
