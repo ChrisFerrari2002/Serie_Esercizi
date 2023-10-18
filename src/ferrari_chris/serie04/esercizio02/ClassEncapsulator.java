@@ -14,7 +14,7 @@ public class ClassEncapsulator {
     private static void printFields(Class<?> targetClass) {
         try {
             Field[] fields = targetClass.getDeclaredFields();
-            Target target = new Target();
+            Class<?> target = Target.class;
             for (Field f : fields) {
                 f.setAccessible(true);
                 String type = f.getType().getSimpleName();
@@ -34,11 +34,6 @@ public class ClassEncapsulator {
         } catch (IllegalAccessException exception){
             System.out.println("Error");
         }
-
-
-    }
-    private static int getModifierValue(Field field){
-        return field.getModifiers();
     }
 
     private static void printGetters(Class<?> targetClass){

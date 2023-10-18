@@ -7,7 +7,7 @@ public class Example {
     @Extract(name = "anotherName")
     private String hello = "world";
 
-    @Extract(name = "enabled")
+    @Extract(name = "anotherName")
     private boolean status;
 
     private int anotherAnswer;
