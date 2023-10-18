@@ -1,4 +1,4 @@
-package ferrari_chris.serie05.esercizio01.codegen;
+package ferrari_chris.serie05.esercizio01;
 
 public class Example {
     @Extract

@@ -1,4 +1,4 @@
-package ferrari_chris.serie05.esercizio01.codegen;
+package ferrari_chris.serie05.esercizio01;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

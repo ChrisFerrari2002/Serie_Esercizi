@@ -57,10 +57,10 @@ public class DocumentationHelper {
         printMethod(theClass);
     }
     private static void printConstructor(final Class<?> theClass){
-        Constructor[] constructors = theClass.getConstructors();
+        Constructor<?>[] constructors = theClass.getConstructors();
 
         System.out.println("## Constructor(s)");
-        Class[] paramType;
+        Class<?>[] paramType;
         Parameter[] paramName;
         for (int i = 0; i < constructors.length; i++) {
             paramType = constructors[i].getParameterTypes();

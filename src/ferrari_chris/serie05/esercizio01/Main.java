@@ -1,4 +1,4 @@
-package ferrari_chris.serie05.esercizio01.codegen;
+package ferrari_chris.serie05.esercizio01;
 
 import java.lang.reflect.Field;
 import java.util.*;
@@ -131,7 +131,7 @@ public class Main {
     public static void main(String[] args) {
         try {
             // REMARK: if using packages, make sure to use the fully qualified name! (my.package.Example)
-            System.out.println(generate("ferrari_chris.serie05.esercizio01.codegen.Example"));
+            System.out.println(generate("ferrari_chris.serie05.esercizio01.Example"));
         } catch (Exception exception) {
             System.err.println(exception.getMessage());
         }
