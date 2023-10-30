@@ -35,12 +35,12 @@ public class Main {
         return generatedCode;
     }
 
-    private static String checkString(Field f){
+    private static String checkString(Field f){ //Posso cambiare il nome della variabile se esiste una variabile gia' definita con la stessa variabile
         Extract extract;
         String name = "";
             extract = f.getAnnotation(Extract.class);
             name = extract.name();
-            if (name.isBlank()) {
+            if (name.isEmpty()) {
                 fieldNames.add(f.getName());
                 name = f.getName();
             } else if (fieldNames.contains(name)) {
@@ -64,7 +64,7 @@ public class Main {
         String name = "";
         String type;
         Object value;
-        String str = "";
+        StringBuilder str = new StringBuilder();
         Example ex = new Example();
         try {
             for (Field f : fields) {
@@ -74,9 +74,9 @@ public class Main {
                     type = f.getType().getSimpleName();
                     value = f.get(ex);
                     if (type.equals("String")) {
-                        str += String.format(fieldStringTemplate, type, name, value);
+                        str.append(String.format(fieldStringTemplate, type, name, value));
                     } else {
-                        str += String.format(fieldTemplate, type, name, value);
+                        str.append(String.format(fieldTemplate, type, name, value));
                     }
                 }
             }
@@ -85,13 +85,13 @@ public class Main {
             return "";
         }
 
-        return str;
+        return str.toString();
     }
     private static String generateGetters(Class<?> clazz){
         Field[] fields = clazz.getDeclaredFields();
         String name = "";
         String type;
-        String str = "";
+        StringBuilder str = new StringBuilder();
         Object[] names = fieldNames.toArray();
         int cnt = names.length - 1;
         for (Field f : fields) {
@@ -99,17 +99,17 @@ public class Main {
             if (f.isAnnotationPresent(Extract.class)) {
                 name = names[cnt].toString().substring(0,1).toUpperCase() + names[cnt].toString().substring(1);
                 type = f.getType().getSimpleName();
-                str += String.format(getterTemplate, type, name, name);
+                str.append(String.format(getterTemplate, type, name, name));
                 cnt--;
             }
         }
-        return str;
+        return str.toString();
     }
     private static String generateSetters(Class<?> clazz){
         Field[] fields = clazz.getDeclaredFields();
         String name = "";
         String type;
-        String str = "";
+        StringBuilder str = new StringBuilder();
         Object[] names = fieldNames.toArray();
         int cnt = names.length - 1;
         for (Field f : fields) {
@@ -117,11 +117,11 @@ public class Main {
             if (f.isAnnotationPresent(Extract.class)) {
                 name = names[cnt].toString().substring(0,1).toUpperCase() + names[cnt].toString().substring(1);
                 type = f.getType().getSimpleName();
-                str += String.format(setterTemplate, name, type, name, names[cnt], names[cnt]);
+                str.append(String.format(setterTemplate, name, type, name, names[cnt], names[cnt]));
                 cnt--;
             }
         }
-        return str;
+        return str.toString();
     }
     private static String generateImplementation(Class<?> clazz) {
         return generateFields(clazz) + generateGetters(clazz) + generateSetters(clazz);
