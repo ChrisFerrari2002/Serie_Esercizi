@@ -17,6 +17,7 @@ public class S6E1 {
      *
      * @param <K> The type of category to assign to the person.
      */
+    @FunctionalInterface
     private interface CategorizeOperation<K> {
 
         /**
@@ -31,6 +32,7 @@ public class S6E1 {
     /**
      * An interface that defines a method to evaluate a person.
      */
+    @FunctionalInterface
     private interface EvaluateOperation {
 
         /**
