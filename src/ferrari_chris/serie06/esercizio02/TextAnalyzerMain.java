@@ -29,7 +29,7 @@ public class TextAnalyzerMain {
     private static List<String> extractText(String path){
         List<String> words = new ArrayList<>();
         try {
-            words = Arrays.asList(new String(Files.readAllBytes(Paths.get(path))).split("\\s+"));
+            words = Arrays.asList(new String(Files.readAllBytes(Paths.get(path))).split("[\\s.,:';!?]+"));
         } catch (IOException e){
             System.out.println("File sbagliato");
         }
@@ -61,13 +61,9 @@ public class TextAnalyzerMain {
         });
         System.out.println("Word with most vowels: " + wordWithMostVowels);
 
-        List<String> wordsStartWithVowel = findAll(wordsList, (String w) -> {
-            char firstLetter = w.toCharArray()[0];
-            return (firstLetter == 'a' || firstLetter == 'e' || firstLetter == 'i' || firstLetter == 'o' || firstLetter == 'u' ||
-                    firstLetter == 'A' || firstLetter == 'E' || firstLetter == 'I' || firstLetter == 'O' || firstLetter == 'U' );
-        });
+        List<String> wordsStartWithVowel = findAll(wordsList, (String w) -> w.substring(0,1).matches("[AEIOUaeiuo]"));
         System.out.println("Words that start with a vowel: " + wordsStartWithVowel);
-        List<String> wordsStartWithT = findAll(wordsList, (String w) -> w.toCharArray()[0] == 'T');
+        List<String> wordsStartWithT = findAll(wordsList, (String w) -> w.substring(0,1).matches("T"));
         System.out.println("Words that start with T: " + wordsStartWithT);
 
     }

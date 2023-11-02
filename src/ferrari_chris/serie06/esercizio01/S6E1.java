@@ -78,23 +78,6 @@ public class S6E1 {
         // Categorize population by surname
         Map<String, List<Person>> categorizedBySurname = categorizeString(population, Person::getSurname);
 
-/*
-        final CategorizeOperation<String> categorizeBySurnameOperation = new CategorizeOperation<String>() {
-            @Override
-            public String getCategory(Person p) {
-                return p.getSurname();
-            }
-        };
-
-        Map<String, List<Person>> categorizedBySurname = new HashMap<>();
-        for (Person person : population) {
-            String category = categorizeBySurnameOperation.getCategory(person);
-            if (categorizedBySurname.containsKey(category) == false)
-                categorizedBySurname.put(category, new ArrayList<>());
-            categorizedBySurname.get(category).add(person);
-        }
-
-*/
 
         // Categorize population by Occupation
         Map<String, List<Person>> categorizedByOccupation = categorizeString(population, person -> {
@@ -104,43 +87,9 @@ public class S6E1 {
                 return ((Worker) person).getWorkSector().toString();
             return "Retired";
         });
-        /*
-        final CategorizeOperation<String> categorizeByOccupationOperation = new CategorizeOperation<String>() {
-            @Override
-            public String getCategory(Person p) {
-                if (p instanceof Student)
-                    return ((Student) p).getEducationalStage().toString();
-                if (p instanceof Worker)
-                    return ((Worker) p).getWorkSector().toString();
-                return "RETIRED";
-            }
-        };
-        Map<String, List<Person>> categorizedByOccupation = new HashMap<>();
-        for (Person person : population) {
-            String category = categorizeByOccupationOperation.getCategory(person);
-            if (categorizedByOccupation.containsKey(category) == false)
-                categorizedByOccupation.put(category, new ArrayList<>());
-            categorizedByOccupation.get(category).add(person);
-        }
-         */
 
         // Categorize population by Age (in decades)
         Map<Integer, List<Person>> categorizedByAgeDecades = categorizeInteger(population, person -> person.getAge() / 10);
-        /*
-        final CategorizeOperation<Integer> categorizeByAgeOperation = new CategorizeOperation<Integer>() {
-            @Override
-            public Integer getCategory(Person p) {
-                return p.getAge() / 10;
-            }
-        };
-        Map<Integer, List<Person>> categorizedByAgeDecades = new HashMap<>();
-        for (Person person : population) {
-            Integer category = categorizeByAgeOperation.getCategory(person);
-            if (categorizedByAgeDecades.containsKey(category) == false)
-                categorizedByAgeDecades.put(category, new ArrayList<>());
-            categorizedByAgeDecades.get(category).add(person);
-        }
-        */
         // Search for people working in secondary sector having salary between 50k - 80k
         List<Person> secondaryWorkers = search(population, (Person p) -> {
             if (!(p instanceof Worker))
@@ -150,24 +99,8 @@ public class S6E1 {
                     worker.getSalary() >= 50_000 &&
                     worker.getSalary() <= 80_000;
         });
-        /*
-        final EvaluateOperation evaluateSecondarySalary50k_80kOperation = new EvaluateOperation() {
-            @Override
-            public boolean evaluate(Person p) {
-                if (!(p instanceof Worker))
-                    return false;
-                final Worker worker = (Worker) p;
-                return worker.getWorkSector() == Worker.WorkSectorType.SECONDARY &&
-                        worker.getSalary() >= 50_000 &&
-                        worker.getSalary() <= 80_000;
-            }
-        };
-        List<Person> secondaryWorkers = new ArrayList<>();
-        for (Person person : population) {
-            if (evaluateSecondarySalary50k_80kOperation.evaluate(person))
-                secondaryWorkers.add(person);
-        }
-        */
+
+
 
 
         // Search for high school students
@@ -175,21 +108,7 @@ public class S6E1 {
             return p instanceof Student student &&
                     student.getEducationalStage() == Student.EducationalStage.HIGH_SCHOOL;
         });
-        /*
 
-        final EvaluateOperation evaluateHighSchoolStudentOperation = new EvaluateOperation() {
-            @Override
-            public boolean evaluate(Person person) {
-                return person instanceof Student student &&
-                        student.getEducationalStage() == Student.EducationalStage.HIGH_SCHOOL;
-            }
-        };
-        List<Person> highSchoolStudents = new ArrayList<>();
-        for (Person person : population) {
-            if (evaluateHighSchoolStudentOperation.evaluate(person))
-                highSchoolStudents.add(person);
-        }
-        */
         // Print results
         printCategorizedString("Population by surname", categorizedBySurname);
         printCategorizedString("Population by occupation", categorizedByOccupation);
