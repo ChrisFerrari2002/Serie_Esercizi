@@ -1,7 +1,7 @@
 package ferrari_chris.serie07.esercizio01.person;
 
-import assignment07.assignments.es1.person.Student.EducationalStage;
-import assignment07.assignments.es1.person.Worker.WorkSectorType;
+import ferrari_chris.serie07.esercizio01.person.Student.EducationalStage;
+import ferrari_chris.serie07.esercizio01.person.Worker.WorkSectorType;
 
 import java.util.Random;
 

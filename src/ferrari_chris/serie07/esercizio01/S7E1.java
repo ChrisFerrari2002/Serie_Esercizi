@@ -7,7 +7,6 @@ import ferrari_chris.serie07.esercizio01.person.Worker;
 
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class S7E1 {
 
@@ -48,92 +47,52 @@ public class S7E1 {
         // All surnames in descending order
         // ------------------------------------------------------------------------------------------------------------
 
-        // TODO replace all for iterations, duplicate removal, sorting and printing to console using only stream operations and lambda functions
-
 
         List<String> allSurnames = population.stream().map(Person::getSurname).toList();
-        List<String> uniqueSurnames = allSurnames.stream().
-        for (Person person : population) {
-            allSurnames.add(person.getSurname());
-        }
-        for (String surname : allSurnames) {
-            if (!uniqueSurnames.contains(surname))
-                uniqueSurnames.add(surname);
-        }
-        Collections.sort(uniqueSurnames, new Comparator<String>() {
-            @Override
-            public int compare(String o1, String o2) {
-                return o2.compareTo(o1);
-            }
-        });
+        List<String> uniqueSurnames = allSurnames.stream().distinct().sorted(Comparator.reverseOrder()).toList();
+
 
         System.out.println("----------------------------------");
         System.out.println("Descending surnames");
         System.out.println("----------------------------------");
 
-        // TODO replace iteration and output generation using only stream operation and lambda functions
-        for (String surname : uniqueSurnames) {
-            System.out.println(surname);
-        }
+        System.out.println(uniqueSurnames.stream().collect(Collectors.joining("\n")));
 
 
         // ------------------------------------------------------------------------------------------------------------
         // Categorize population by surname
         // ------------------------------------------------------------------------------------------------------------
 
-        // TODO replace for iteration and categorize logic using only stream operations and lambda functions
-        final CategorizeOperation<String> categorizeBySurnameOperation = new CategorizeOperation<String>() {
-            @Override
-            public String getCategory(Person p) {
-                return p.getSurname();
-            }
-        };
-        Map<String, List<Person>> categorizedBySurname = new HashMap<>();
-        for (Person person : population) {
-            String category = categorizeBySurnameOperation.getCategory(person);
-            if (categorizedBySurname.containsKey(category) == false)
-                categorizedBySurname.put(category, new ArrayList<>());
-            categorizedBySurname.get(category).add(person);
-        }
+
+        Map<String, List<Person>> categorizedBySurname = population.stream().collect(Collectors.groupingBy(Person::getSurname));
 
         System.out.println("----------------------------------");
         System.out.println("Population by surname");
         System.out.println("----------------------------------");
 
-        // TODO replace iteration and output generation using only stream operation and lambda functions
-        for (String category : categorizedBySurname.keySet())
-            System.out.println(String.format("%s : %d", category, categorizedBySurname.get(category).size()));
+        categorizedBySurname.entrySet().stream().forEach(list -> System.out.printf("%s : %d\n", list.getKey(), list.getValue().size()));
+
 
         // ------------------------------------------------------------------------------------------------------------
         // Categorize population by Occupation
         // ------------------------------------------------------------------------------------------------------------
 
         // TODO replace for iteration and categorize logic using only stream operations and lambda functions
-        final CategorizeOperation<String> categorizeByOccupationOperation = new CategorizeOperation<String>() {
-            @Override
-            public String getCategory(Person p) {
-                if (p instanceof Student)
-                    return ((Student) p).getEducationalStage().toString();
-                if (p instanceof Worker)
-                    return ((Worker) p).getWorkSector().toString();
-                return "RETIRED";
-            }
-        };
-        Map<String, List<Person>> categorizedByOccupation = new HashMap<>();
-        for (Person person : population) {
-            String category = categorizeByOccupationOperation.getCategory(person);
-            if (categorizedByOccupation.containsKey(category) == false)
-                categorizedByOccupation.put(category, new ArrayList<>());
-            categorizedByOccupation.get(category).add(person);
-        }
+
+        Map<String, List<Person>> categorizedByOccupation = population.stream().collect(Collectors.groupingBy(person -> {
+            if (person instanceof Student)
+                return ((Student) person).getEducationalStage().toString();
+            if (person instanceof Worker)
+                return ((Worker) person).getWorkSector().toString();
+            return "RETIRED";
+        }));
 
         System.out.println("----------------------------------");
         System.out.println("Population by occupation");
         System.out.println("----------------------------------");
 
         // TODO replace iteration and output generation using only stream operation and lambda functions
-        for (String category : categorizedByOccupation.keySet())
-            System.out.println(String.format("%s : %d", category, categorizedByOccupation.get(category).size()));
+        categorizedByOccupation.entrySet().forEach(list -> System.out.printf("%s : %d\n", list.getKey(), list.getValue().size()));;
 
         // ------------------------------------------------------------------------------------------------------------
         // Categorize population by Age (in decades)
