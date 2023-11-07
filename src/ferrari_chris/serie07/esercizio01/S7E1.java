@@ -77,8 +77,6 @@ public class S7E1 {
         // Categorize population by Occupation
         // ------------------------------------------------------------------------------------------------------------
 
-        // TODO replace for iteration and categorize logic using only stream operations and lambda functions
-
         Map<String, List<Person>> categorizedByOccupation = population.stream().collect(Collectors.groupingBy(person -> {
             if (person instanceof Student)
                 return ((Student) person).getEducationalStage().toString();
@@ -91,89 +89,53 @@ public class S7E1 {
         System.out.println("Population by occupation");
         System.out.println("----------------------------------");
 
-        // TODO replace iteration and output generation using only stream operation and lambda functions
-        categorizedByOccupation.entrySet().forEach(list -> System.out.printf("%s : %d\n", list.getKey(), list.getValue().size()));;
+        categorizedByOccupation.entrySet().forEach(list -> System.out.printf("%s : %d\n", list.getKey(), list.getValue().size()));
 
         // ------------------------------------------------------------------------------------------------------------
         // Categorize population by Age (in decades)
         // ------------------------------------------------------------------------------------------------------------
 
-        // TODO replace for iteration and categorize logic using only stream operations and lambda functions
-        final CategorizeOperation<Integer> categorizeByAgeOperation = new CategorizeOperation<Integer>() {
-            @Override
-            public Integer getCategory(Person p) {
-                return p.getAge() / 10;
-            }
-        };
-        Map<Integer, List<Person>> categorizedByAgeDecades = new HashMap<>();
-        for (Person person : population) {
-            Integer category = categorizeByAgeOperation.getCategory(person);
-            if (categorizedByAgeDecades.containsKey(category) == false)
-                categorizedByAgeDecades.put(category, new ArrayList<>());
-            categorizedByAgeDecades.get(category).add(person);
-        }
+        Map<Integer, List<Person>> categorizedByAgeDecades = population.stream().collect(Collectors.groupingBy(p -> p.getAge()/10));
 
         System.out.println("----------------------------------");
         System.out.println("Population by decades");
         System.out.println("----------------------------------");
 
-        // TODO replace iteration and output generation using only stream operation and lambda functions
-        for (Integer category : categorizedByAgeDecades.keySet())
-            System.out.println(String.format("%d : %d", category, categorizedByAgeDecades.get(category).size()));
-
+        categorizedByAgeDecades.entrySet().forEach(list -> System.out.println(String.format("%s : %d", list.getKey(), list.getValue().size())));
 
         // ------------------------------------------------------------------------------------------------------------
         // Search for people working in secondary sector having salary between 50k - 80k
         // ------------------------------------------------------------------------------------------------------------
 
         // TODO replace for iteration and evaluate logic using only stream operations and lambda functions
-        final EvaluateOperation evaluateSecondarySalary50k_80kOperation = new EvaluateOperation() {
-            @Override
-            public boolean evaluate(Person p) {
-                if (!(p instanceof Worker))
-                    return false;
-                final Worker worker = (Worker) p;
+
+        List<Person> secondaryWorkers = population.stream().filter(person -> {
+            if (person instanceof Worker){
+                final Worker worker = (Worker) person;
                 return worker.getWorkSector() == Worker.WorkSectorType.SECONDARY &&
                         worker.getSalary() >= 50_000 &&
                         worker.getSalary() <= 80_000;
             }
-        };
-        List<Person> secondaryWorkers = new ArrayList<>();
-        for (Person person : population) {
-            if (evaluateSecondarySalary50k_80kOperation.evaluate(person))
-                secondaryWorkers.add(person);
-        }
+            return false;
+        }).toList();
 
         System.out.println("----------------------------------");
-        System.out.println(String.format("Secondary sector workers with salary (50k - 80k) [%d elements]", secondaryWorkers.size()));
+        System.out.printf("Secondary sector workers with salary (50k - 80k) [%d elements]%n", secondaryWorkers.size());
         System.out.println("----------------------------------");
 
-        // TODO replace iteration and output generation using only stream operation and lambda functions
-        for (Person p : secondaryWorkers)
-            System.out.print(p + ", ");
+        secondaryWorkers.stream().forEach(person -> System.out.print(person + ", "));
         System.out.println();
-
 
         // ------------------------------------------------------------------------------------------------------------
         // Search for high school students
         // ------------------------------------------------------------------------------------------------------------
 
         // TODO replace for iteration and evaluate logic using only stream operations and lambda functions
-        final EvaluateOperation evaluateHighSchoolStudentOperation = new EvaluateOperation() {
-            @Override
-            public boolean evaluate(Person person) {
-                return person instanceof Student student &&
-                        student.getEducationalStage() == Student.EducationalStage.HIGH_SCHOOL;
-            }
-        };
-        List<Person> highSchoolStudents = new ArrayList<>();
-        for (Person person : population) {
-            if (evaluateHighSchoolStudentOperation.evaluate(person))
-                highSchoolStudents.add(person);
-        }
+        List<Person> highSchoolStudents = population.stream().filter(person -> person instanceof Student student &&
+                student.getEducationalStage() == Student.EducationalStage.HIGH_SCHOOL).toList();
 
         System.out.println("----------------------------------");
-        System.out.println(String.format("HighSchool students [%d elements]", highSchoolStudents.size()));
+        System.out.printf("HighSchool students [%d elements]%n", highSchoolStudents.size());
         System.out.println("----------------------------------");
 
         // TODO replace iteration and output generation using only stream operation and lambda functions
