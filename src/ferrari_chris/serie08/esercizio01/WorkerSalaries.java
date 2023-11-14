@@ -7,19 +7,18 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 class Payroll {
-    private int amount;
+    private final int amount;
 
     public Payroll(int amount) {
         this.amount = amount;
     }
 
-    public int getAmount() {
+    public final int getAmount() {
         return amount;
     }
 
-    public void increaseAmount(final float factor) {
-        this.amount = (int) (this.amount * factor);
-    }
+
+
 
     @Override
     public String toString() {
@@ -62,10 +61,8 @@ public class WorkerSalaries {
         final List<Payroll> payrollsToPromote = new ArrayList<>();
 
         // Find payrolls to increase
-        return workers.stream().map(Worker::getPayroll).filter(payroll -> payroll.getAmount() <= threshold).mapToDouble(payroll -> {
-            payroll.increaseAmount(factor);
-            return payroll.getAmount();
-        }).average().orElse(0);
+        return workers.stream().map(Worker::getPayroll).filter(payroll -> payroll.getAmount() <= threshold)
+                .mapToDouble(payroll -> (double) (payroll.getAmount()*factor)).average().orElse(0);
     }
 
     public static void main(String[] args) {
