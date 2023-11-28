@@ -3,7 +3,9 @@ package ferrari_chris.esame_prova.esercizio01;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Parameter;
+import java.lang.reflect.Type;
 import java.sql.Types;
+import java.util.Arrays;
 
 class AutoTest {
     public AutoTest() {
@@ -43,6 +45,7 @@ class PerformTest {
     public static void main(String[] args) throws Exception {
         Class<AutoTest> testClass = AutoTest.class;
         Method[] mets = testClass.getDeclaredMethods();
+
         for (Method met : mets) {
             String name = met.getName();
             if (name.startsWith("autorun")){

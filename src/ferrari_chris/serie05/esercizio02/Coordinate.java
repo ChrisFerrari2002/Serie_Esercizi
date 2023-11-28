@@ -3,7 +3,7 @@ package ferrari_chris.serie05.esercizio02;
 import java.io.Serializable;
 
 @MarkdownDoc
-class Coordinate implements Comparable<Coordinate> {
+class Coordinate implements Comparable<Coordinate>, Serializable {
     private float lat;
     private float lon;
 

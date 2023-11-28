@@ -12,9 +12,9 @@ final class Item {
         }
     }
 
-    private int id;
-    private double price;
-    private Category category;
+    private final int id;
+    private final double price;
+    private final Category category;
 
     public Item(int id, double price, Category category) {
         this.id = id;
@@ -65,9 +65,9 @@ class GroceriesStore {
         List<Item> stock = createInitialStock();
 
         // Compute discounts for snacks
-        final Item.Category discountCategory = Item.Category.CANDY;
+        final Item.Category discountCategory = Item.Category.DRINK;
         final double discount = 0.75;
-        System.out.println(String.format("This weeks promotion: %s %3.1f%% OFF", discountCategory, (1. - discount) * 100.));
+        System.out.printf("This weeks promotion: %s %3.1f%% OFF%n", discountCategory, (1. - discount) * 100.);
 
         // TODO: implement solution starting from here
         final String topDiscounted = stock.stream()
@@ -77,7 +77,6 @@ class GroceriesStore {
                 .limit(2)
                 .map(Object::toString)
                 .collect(Collectors.joining(", "));
-
         // TODO: implement solution up to here
 
         System.out.println("Top discounted items are: " + topDiscounted);
